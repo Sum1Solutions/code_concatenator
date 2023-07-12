@@ -30,5 +30,5 @@ def print_files(directory, output_file):
 # Directory to be collected
 directory = "."
 
-with open("CodeForReview.log", "w") as output_file:
+with open("Concatenated_files.txt", "w") as output_file:
     print_files(directory, output_file)
