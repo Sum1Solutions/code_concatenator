@@ -2,23 +2,35 @@ import os
 import fnmatch
 
 # File types to be collected
-include_file_types = ['*.py', '*.html', '*.css', '*.js', '*.txt', '*.md', '*.ico', '*.png', '*.jpg', '*.jpeg', '*.gif', '*.svg', '*.json']
+include_file_types = ['*.py', '*.txt']
 
 # File types and directories to be excluded
-exclude_file_types = ['Concatenated_files.txt', 
-                      'code_concatenator.py',
+exclude_file_types = ['*.zip', '*.pyc', '*.log',
+                      'Concatenated_files.txt',
+                      'code_concatenator.py', #exclude this file
                       'README.md',
-                      'LICENSE.txt',
-                      '*.zip', '*.pyc', '*.log']
+                      'LICENSE.txt']
 
-exclude_dirs = ['env', '.git', '.vscode', '__pycache__']
+
+exclude_dirs = ['env', 
+                '.git', 
+                '.vscode', 
+                '__pycache__']
+
+def print_dir_tree(directory, output_file, level=0):
+    indent = ' ' * 4 * level
+    for item in os.listdir(directory):
+        item_path = os.path.join(directory, item)
+        if os.path.isdir(item_path) and item not in exclude_dirs:
+            output_file.write(f"{indent}Directory: {item}\n")
+            print_dir_tree(item_path, output_file, level + 1)
 
 def print_files(directory, output_file):
-    output_file.write("\nFiles:\n")
-    for file in os.listdir(directory):
-        file_path = os.path.join(directory, file)
-        if os.path.isfile(file_path):
-            if any(fnmatch.fnmatch(file, file_type) for file_type in include_file_types) and file not in exclude_file_types:
+    for root, dirs, files in os.walk(directory):
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+        for file in files:
+            if any(fnmatch.fnmatch(file, pattern) for pattern in include_file_types) and not any(fnmatch.fnmatch(file, pattern) for pattern in exclude_file_types):
+                file_path = os.path.join(root, file)
                 output_file.write(f"\nFile: {file_path}\n")
                 try:
                     with open(file_path, "r") as file_to_include:
@@ -31,4 +43,7 @@ def print_files(directory, output_file):
 directory = "."
 
 with open("Concatenated_files.txt", "w") as output_file:
+    output_file.write("Project Tree:\n")
+    print_dir_tree(directory, output_file)
+    output_file.write("\nFiles:\n")
     print_files(directory, output_file)
