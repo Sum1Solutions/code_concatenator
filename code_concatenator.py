@@ -5,7 +5,7 @@ import fnmatch
 include_file_types = ['*.py', '*.html', '*.css', '*.js', '*.txt', '*.md', '*.ico', '*.png', '*.jpg', '*.jpeg', '*.gif', '*.svg', '*.json']
 
 # File types and directories to be excluded
-exclude_file_types = ['files_concatenate.log', 
+exclude_file_types = ['Concatenated_files.txt', 
                       'code_concatenator.py',
                       'README.md',
                       'LICENSE.txt',
